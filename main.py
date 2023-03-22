@@ -8,37 +8,45 @@ def main():
     # Create Vars
     player2 = 0
     bust = False
+    play = True
     deck = create_deck()
+    while play:
+        player1 = p_starting_hand(deck)
+        while not bust:
+            choice = input(f'would you like a hit? your hand size is {player1} (y,n): ')
+            if choice.upper() == 'Y':
+                card = deal_cards(deck, 1)
+                p_ace_check(player1, card)
 
-    print('Thanks for playing!')
-    player1 = p_starting_hand(deck)
-
-    while not bust:
-        choice = input(f'would you like a hit? your hand size is {player1} (y,n): ')
-        if choice.upper() == 'Y':
+                player1 += card
+            else:
+                print(f'Your ending hand size is {player1}. lets see how the computer does')
+                break
+            if player1 > 21:
+                print(f'Player 1 Bust. with a hand value of {player1}\n'
+                      f'Player 2 hand a hand value of {player2}')
+                bust = True
+                break
+        # bust does not need to be set back to true, player lost.
+        while not bust:
             card = deal_cards(deck, 1)
-            ace_check(player1, card)
+            ace_check(player2, card)
 
-            player1 += card
+            player2 += card
+            if player2 > 21:
+                print(f'Player 2 Bust. with a hand value of {player2}\n'
+                      f'Player 1 hand a hand value of {player1}')
+                bust = True
+                break
+        choice = input(f'Do you want to play again?: ')
+        if choice.upper() == 'N':
+            play = False
+            break
         else:
-            print(f'Your ending hand size is {player1}. lets see how the computer does')
-            break
-        if player1 > 21:
-            print(f'Player 1 Bust. with a hand value of {player1}\n'
-                  f'Player 2 hand a hand value of {player2}')
-            bust = True
-            break
-    # bust does not need to be set back to true, player lost.
-    while not bust:
-        card = deal_cards(deck, 1)
-        ace_check(player2, card)
-
-        player2 += card
-        if player2 > 21:
-            print(f'Player 2 Bust. with a hand value of {player2}\n'
-                  f'Player 1 hand a hand value of {player1}')
-            bust = True
-            break
+            play = True
+            bust = False
+            player1 = 0
+            player2 = 0
 
 
 def create_deck():

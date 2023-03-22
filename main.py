@@ -108,3 +108,4 @@ def p_starting_hand(deck):
 
 
 main()
+input()

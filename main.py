@@ -10,7 +10,9 @@ def main():
     bust = False
     play = True
     deck = create_deck()
+    limit = 17
     while play:
+        # set user hand size to 2 cards from the deck
         player1 = p_starting_hand(deck)
         while not bust:
             choice = input(f'would you like a hit? your hand size is {player1} (y,n): ')
@@ -23,21 +25,25 @@ def main():
                 print(f'Your ending hand size is {player1}. lets see how the computer does')
                 break
             if player1 > 21:
-                print(f'Player 1 Bust. with a hand value of {player1}\n'
-                      f'Player 2 hand a hand value of {player2}')
+                print(f'Player 1 Bust. with a hand value of {player1}')
                 bust = True
                 break
         # bust does not need to be set back to true, player lost.
         while not bust:
-            card = deal_cards(deck, 1)
-            ace_check(player2, card)
+            while player2 <= limit:
+                card = deal_cards(deck, 1)
+                ace_check(player2, card)
 
-            player2 += card
-            if player2 > 21:
-                print(f'Player 2 Bust. with a hand value of {player2}\n'
-                      f'Player 1 hand a hand value of {player1}')
-                bust = True
-                break
+                player2 += card
+                if player2 > 21:
+                    print(f'Player 2 Bust. with a hand value of {player2}\n'
+                          f'Player 1 hand a hand value of {player1}')
+                    bust = True
+                    break
+                if player2 >= limit:
+                    winner(player1, player2)
+                    break
+            break
         choice = input(f'Do you want to play again?: ')
         if choice.upper() == 'N':
             play = False
@@ -115,5 +121,14 @@ def p_starting_hand(deck):
     return hand
 
 
+def winner(p1, p2):
+    if p1 > p2:
+        print(f'congrats, you won with a hand size of: {p1}\n'
+              f'The dealer had a hand size of: {p2}')
+    if p2 > p1:
+        print(f'you lost to the dealer: {p2}, you had a hand size of: {p1}')
+    if p1 == p2:
+        print(f'it was a tie, Dealer wins!')
+
+
 main()
-input()

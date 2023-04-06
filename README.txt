@@ -1,3 +1,8 @@
-Currently this is a Simple command-line BlackJake game. As of Right now, as long as you don't bust, you win the game as the computer continues to hit until it busts.
+This is a Simple command-line BlackJake game. You finish your hand before the dealer gets delt. When you get delt an ace you have the option of having it played as
+either a 1 or 11, until you bust, at which point the ace will revert to a 1 and you can contnue with your new handsize. The dealer deals to them selves until they hit the
+limit of 17. If they get delt an ace they will choose to use it as a 11 if it wont cause them to bust, they don't have the option the revert it to a 1 later in the game.
+
 Working to add:
-If you bust and have an Ace that you orignally chose to be an 11, you will be able to change it to a 1
+Allow the dealer to revert the ace to a 1 if it would cause them to bust.
+Make the code work logically if the Player or Dealer has multiple Ace's in their hand.
+Possibly add the option of a GUI

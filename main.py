@@ -9,25 +9,34 @@ def main():
     player2 = 0
     bust = False
     play = True
+    ace_as_11 = False
     deck = create_deck()
     limit = 17
     while play:
         # set user hand size to 2 cards from the deck
-        player1 = p_starting_hand(deck)
+        player1, ace_as_11 = p_starting_hand(deck, ace_as_11)
         while not bust:
             choice = input(f'would you like a hit? your hand size is {player1} (y,n): ')
             if choice.upper() == 'Y':
                 card = deal_cards(deck, 1)
-                p_ace_check(player1, card)
+                card, ace_as_11 = p_ace_check(player1, card, ace_as_11)
 
                 player1 += card
             else:
                 print(f'Your ending hand size is {player1}. lets see how the computer does')
                 break
             if player1 > 21:
-                print(f'Player 1 Bust. with a hand value of {player1}')
-                bust = True
-                break
+                if not ace_as_11:
+                    print(f'Player 1 Bust. with a hand value of {player1}')
+                    bust = True
+                    break
+                else:
+                    print(f'your hand size is {player1}, but you previously choice to have an ace as 11, so it is now'
+                          f' a 1 and your hand size is:')
+                    ace_as_11 = False
+                    player1 -= 10
+                    print(player1)
+
         # bust does not need to be set back to true, player lost.
         while not bust:
             while player2 <= limit:
@@ -44,7 +53,7 @@ def main():
                     winner(player1, player2)
                     break
             break
-        choice = input(f'Do you want to play again?: ')
+        choice = input(f'Do you want to play again? (y,n): ')
         if choice.upper() == 'N':
             play = False
             break
@@ -99,26 +108,27 @@ def ace_check(hand_value, card_value):
             return 1
 
 
-def p_ace_check(hand, card):
+def p_ace_check(hand, card, ace_as_11):
     if card == 1:
         choice = int(input(f'Would you like to use this ace as a 1 or 11? Your current hand size is {hand} (1,11): '))
         if choice == 1:
-            return 1
+            return 1, ace_as_11
         elif choice == 11:
-            return 11
+            ace_as_11 = True
+            return 11, ace_as_11
     else:
-        return card
+        return card, ace_as_11
 
 
-def p_starting_hand(deck):
+def p_starting_hand(deck, ace_as_11):
     hand = 0
     for x in range(0, 2):
         card = 0
         card += deal_cards(deck, 1)
-        card = p_ace_check(hand, card)
+        card, ace_as_11 = p_ace_check(hand, card, ace_as_11)
         if card is not None:
             hand += card
-    return hand
+    return hand, ace_as_11
 
 
 def winner(p1, p2):

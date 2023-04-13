@@ -3,4 +3,5 @@ This is a Simple command-line BlackJake game. You finish your hand before the de
 Working to add:
 Make the code work logically if the Player or Dealer has multiple Ace's in their hand.
 Add input validation.
+Add some *beautification* to the CLI
 Possibly add the option of a GUI

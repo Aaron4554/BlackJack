@@ -6,71 +6,23 @@ import random
 
 def main():
     # Create Vars
-    player2 = 0
-    bust = False
     play = True
-    p_ace_as_11 = False
-    d_ace_as_11 = False
     deck = create_deck()
     limit = 17
+    bust = False
     while play:
-        # set user hand size to 2 cards from the deck
-        player1, p_ace_as_11 = p_starting_hand(deck, p_ace_as_11)
-        # continue the game while neither party busts
         while not bust:
-
-            choice = input(f'would you like a hit? your hand size is {player1} (y,n): ')
-            if choice.upper() == 'Y':
-                card = deal_cards(deck, 1)
-                card, p_ace_as_11 = p_ace_check(player1, card, p_ace_as_11)
-                player1 += card
-
-            else:
-                print(f'Your ending hand size is {player1}. lets see how the computer does')
+            player1, bust = player_start(deck)
+            if bust:
                 break
-
-            if player1 > 21:
-                if not p_ace_as_11:
-                    print(f'Player 1 Bust. with a hand value of {player1}')
-                    bust = True
-                    break
-
-                else:
-                    print(f'your hand size is {player1}, but you previously choice to have an ace as 11, so it is now'
-                          f' a 1 and your hand size is:')
-                    p_ace_as_11 = False
-                    player1 -= 10
-                    print(player1)
-        # dealer starts here
-        while not bust:
-            # check to see if the dealer is below the limit
-            while player2 <= limit:
-                card = deal_cards(deck, 1)
-                card, d_ace_as_11 = ace_check(player2, card, d_ace_as_11)
-                player2 += card
-
-                if player2 > 21:
-                    if not d_ace_as_11:
-                        print(f'Player 2 Bust. with a hand value of {player2}\n'
-                              f'Player 1 hand a hand value of {player1}')
-                        bust = True
-                        break
-
-                    else:
-                        d_ace_as_11 = False
-                        player2 -= 10
-                        print(f'Dealer bust! but they had an ace used as an 11, its now a 1 and their hand size is '
-                              f'{player2}')
-
-                if player2 >= limit:
-                    winner(player1, player2)
-                    break
+            dealer_start(deck, limit, player1)
             break
-        choice = input(f'Do you want to play again? (y,n): ')
+        choice = input(f'\nDo you want to play again? (y,n): ')
         if choice.upper() == 'N':
             play = False
             break
         else:
+            print()
             play = True
             bust = False
             player1 = 0
@@ -110,6 +62,68 @@ def deal_cards(deck, number):
         hand_value += deck[card]
         print(card)
     return hand_value
+
+
+def player_start(deck):
+    p_ace_as_11 = False
+    bust = False
+    # set user hand size to 2 cards from the deck
+    player1, p_ace_as_11 = p_starting_hand(deck, p_ace_as_11)
+    while not bust:
+
+        choice = input(f'\nwould you like a hit? your hand size is {player1} (y,n): ')
+        if choice.upper() == 'Y':
+            print()
+            card = deal_cards(deck, 1)
+            card, p_ace_as_11 = p_ace_check(player1, card, p_ace_as_11)
+            player1 += card
+
+        else:
+            print(f'\nYour ending hand size is {player1}. lets see how the computer does\n')
+            return player1, bust
+
+        if player1 > 21:
+            if not p_ace_as_11:
+                print(f'\nPlayer 1 Bust. with a hand value of {player1}\n')
+                bust = True
+                return player1, bust
+
+            else:
+                print(f'your hand size is {player1}, but you previously choice to have an ace as 11, so it is now'
+                      f' a 1 and your hand size is:')
+                p_ace_as_11 = False
+                player1 -= 10
+                print(player1, '\n')
+
+
+def dealer_start(deck, limit, player1):
+    bust = False
+    player2 = 0
+    d_ace_as_11 = False
+    while not bust:
+        # check to see if the dealer is below the limit
+        while player2 <= limit:
+            card = deal_cards(deck, 1)
+            card, d_ace_as_11 = ace_check(player2, card, d_ace_as_11)
+            player2 += card
+
+            if player2 > 21:
+                if not d_ace_as_11:
+                    print(f'\nPlayer 2 Bust. with a hand value of {player2}\n'
+                          f'Player 1 hand a hand value of {player1}\n')
+                    bust = True
+                    break
+
+                else:
+                    d_ace_as_11 = False
+                    player2 -= 10
+                    print(f'\nDealer bust! but they had an ace used as an 11, its now a 1 and their hand size is '
+                          f'{player2}\n')
+
+            if player2 >= limit:
+                winner(player1, player2)
+                break
+        break
 
 
 # check to see if a card delt to dealer is an ace, if it is, use it wisely
@@ -155,12 +169,12 @@ def p_starting_hand(deck, p_ace_as_11):
 # find the winner
 def winner(p1, p2):
     if p1 > p2:
-        print(f'congrats, you won with a hand size of: {p1}\n'
-              f'The dealer had a hand size of: {p2}')
+        print(f'\ncongrats, you won with a hand size of: {p1}\n'
+              f'The dealer had a hand size of: {p2}\n')
     if p2 > p1:
-        print(f'you lost to the dealer: {p2}, you had a hand size of: {p1}')
+        print(f'\nyou lost to the dealer: {p2}, you had a hand size of: {p1}\n')
     if p1 == p2:
-        print(f'it was a tie, Dealer wins!')
+        print(f'\nit was a tie, Dealer wins!\n')
 
 
 main()
